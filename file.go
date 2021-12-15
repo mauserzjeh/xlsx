@@ -29,6 +29,7 @@ type File struct {
 	rowLimit             int
 	colLimit             int
 	valueOnly            bool
+	skipMergeCell        bool
 }
 
 const NoRowLimit int = -1
@@ -59,6 +60,16 @@ func ColLimit(n int) FileOption {
 func ValueOnly() FileOption {
 	return func(f *File) {
 		f.valueOnly = true
+	}
+}
+
+// SkipMergeCell will skip cell merging during truncateSheetXMLValueOnly
+// It is used in combination with ValueOnly to save even more memory. Unfortunately if a
+// big worksheet has a lot of cells merged it will use too much memory and cause
+// a memory overflow
+func SkipMergeCell() FileOption {
+	return func(f *File) {
+		f.skipMergeCell = true
 	}
 }
 

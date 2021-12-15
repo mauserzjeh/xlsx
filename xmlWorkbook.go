@@ -179,7 +179,7 @@ func worksheetFileForSheet(sheet xlsxSheet, worksheets map[string]*zip.File, she
 // getWorksheetFromSheet() is an internal helper function to open a
 // sheetN.xml file, referred to by an xlsx.xlsxSheet struct, from the XLSX
 // file and unmarshal it an xlsx.xlsxWorksheet struct
-func getWorksheetFromSheet(sheet xlsxSheet, worksheets map[string]*zip.File, sheetXMLMap map[string]string, rowLimit int, valueOnly bool) (*xlsxWorksheet, error) {
+func getWorksheetFromSheet(sheet xlsxSheet, worksheets map[string]*zip.File, sheetXMLMap map[string]string, rowLimit int, valueOnly, skipMergeCell bool) (*xlsxWorksheet, error) {
 	var r io.Reader
 	var decoder *xml.Decoder
 	var worksheet *xlsxWorksheet
@@ -210,7 +210,7 @@ func getWorksheetFromSheet(sheet xlsxSheet, worksheets map[string]*zip.File, she
 	}
 
 	if valueOnly {
-		r, err = truncateSheetXMLValueOnly(r)
+		r, err = truncateSheetXMLValueOnly(r, skipMergeCell)
 		if err != nil {
 			return wrap(err)
 		}
